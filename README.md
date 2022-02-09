@@ -1,18 +1,17 @@
 
-Implementation of real-world application: https://github.com/gothinkster/realworld/ using Django and HTMX.
+Implementation of real-world application: https://github.com/gothinkster/realworld/ using Django and Unpoly.
 
 An in-depth discussion of this implementation can be found [here](https://danjacob.net/posts/anatomyofdjangohtmxproject/).
 
 Tech Stack:
 
 * [Django](https://djangoproject.com)
-* [HTMX](https://htmx.org)
-* [Alpine](https://alpinejs.dev)
+* [Unpoly](https://unpoly.com)
 
 To install and run locally:
 
 ```bash
-git clone https://github.com/danjac/realworld/ && cd realworld
+git clone https://github.com/alnuaimi94/realworld/ && cd realworld
 
 python -m venv venv
 

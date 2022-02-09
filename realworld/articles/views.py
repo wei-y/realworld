@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from django_htmx.http import HttpResponseClientRedirect
 from realworld.comments.forms import CommentForm
 from realworld.comments.models import Comment
 from taggit.models import Tag
@@ -96,7 +95,7 @@ def create_article(request: HttpRequest) -> HttpResponse:
         # save tags
         form.save_m2m()
 
-        return HttpResponseClientRedirect(article.get_absolute_url())
+        return HttpResponseRedirect(article.get_absolute_url())
 
     return TemplateResponse(request, "articles/_article_form.html", {"form": form})
 
@@ -120,7 +119,7 @@ def edit_article(request: HttpRequest, article_id: int) -> HttpResponse:
 
     if (form := ArticleForm(request.POST, instance=article)).is_valid():
         form.save()
-        return HttpResponseClientRedirect(article.get_absolute_url())
+        return HttpResponseRedirect(article.get_absolute_url())
 
     return TemplateResponse(
         request,
