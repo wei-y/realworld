@@ -1,15 +1,17 @@
 <div class="article-preview">
   <div class="article-meta">
-    {% if article.author.image %}
-      <a href="{{ article.author.get_absolute_url }}">
+    <a href="{{ article.author.get_absolute_url }}">
+      {% if article.author.image %}
         <img src="{{ article.author.image }}" />
-      </a>
-    {% endif %}
+      {% else %}
+        <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" />
+      {% endif %}
+    </a>
     <div class="info">
       <a href="{{ article.author.get_absolute_url }}" class="author">
         <span>{{ article.author.get_full_name }}</span>
       </a>
-      <span class="date">{{ article.created|date }}</span>
+      <span class="date">{{ article.created|date:"F j, Y" }}</span>
     </div>
     {% include "articles/_small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
   </div>

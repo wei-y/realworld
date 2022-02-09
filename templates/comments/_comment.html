@@ -3,23 +3,24 @@
     <p class="card-text">{{ comment.content|linebreaksbr }}</p>
   </div>
   <div class="card-footer">
-    {% if comment.author.image %}
-      <a href="{{ comment.author.get_absolute_url }}" class="comment-author">
+    <a href="{{ comment.author.get_absolute_url }}" class="comment-author">
+      {% if comment.author.image %}
         <img src="{{ comment.author.image }}" class="comment-author-img" />
-      </a>
-    {% endif %}
-    &nbsp;
+      {% else %}
+        <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="comment-author-img" />
+      {% endif %}
+    </a>&nbsp;&nbsp;
     <a href="{{ comment.author.get_absolute_url }}" class="comment-author">{{ comment.author.get_full_name }}</a>
-    <span class="date-posted">{{ comment.created|date }}</span>
+    <span class="date-posted">{{ comment.created|date:"F j, Y" }}</span>
 
     {% if user.is_authenticated and user == comment.author %}
-      <div class="mod-options">
+      <div class="mod-options row">
         <a href="{% url 'edit_comment' comment.id %}">
           <i class="ion-edit"></i>
         </a>
         <form action="{% url 'delete_comment' comment.id %}" method="post">
           {% csrf_token %}
-          <button type="submit" class="btn-outline-none">
+          <button type="submit" style="line-height:0;border:none;background:transparent">
             <i class="ion-trash-a"></i>
           </button>
         </form>
