@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # 3rd party libraries
     "taggit",
     "widget_tweaks",
+    "debug_toolbar",
 
     # Local apps
     "realworld.apps.accounts",
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -140,3 +142,10 @@ AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
+
+
+# Django debug toolbar
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
