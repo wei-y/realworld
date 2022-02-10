@@ -34,8 +34,8 @@
             </button>
           </form>
         {% else %}
-          {% include "realworld/accounts/partials/follow_btn.html" with button_id="follow-top" followed=article.author %}
-          {% include "realworld/articles/partials/favorite_btn.html" with button_id="favorite-top" %}
+          {% include "realworld/accounts/partials/follow_btn.html" with is_following=article.author.followers followed=article.author %}
+          {% include "realworld/articles/partials/favorite_btn.html" with is_favorite=article.is_favorite num_favorites=article.num_favorites %}
         {% endif %}
       </div>
     </div>
@@ -79,8 +79,8 @@
             </button>
           </form>
         {% else %}
-          {% include "realworld/accounts/partials/follow_btn.html" with button_id="follow-bottom" followed=article.author %}
-          {% include "realworld/articles/partials/favorite_btn.html" with button_id="favorite-bottom" %}
+          {% include "realworld/accounts/partials/follow_btn.html" with is_following=article.author.followers followed=article.author %}
+          {% include "realworld/articles/partials/favorite_btn.html" with is_favorite=article.is_favorite num_favorites=article.num_favorites %}
         {% endif %}
       </div>
     </div>

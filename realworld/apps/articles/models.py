@@ -64,7 +64,7 @@ class Article(models.Model):
         return reverse(
             "article_detail",
             kwargs={
-                "article_id": self.id,
+                "pk": self.id,
                 "slug": self.slug,
             },
         )

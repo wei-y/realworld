@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView, DetailView
 
 from taggit.models import Tag
 
@@ -16,66 +17,56 @@ from .forms import ArticleForm
 from .models import Article
 
 
-@require_http_methods(["GET"])
-def home(request: HttpRequest) -> HttpResponse:
+class ArticleListView(ListView):
+    model = Article
+    context_object_name = "articles"
+    template_name = "realworld/articles/article_list.html"
 
-    articles = (
-        Article.objects.select_related("author")
-        .with_favorites(request.user)
-        .prefetch_related("tags")
-        .order_by("-created")
-    )
+    def get_queryset(self):
+        queryset = (super().get_queryset()
+                    .select_related("author")
+                    .with_favorites(self.request.user)
+                    .prefetch_related("tags")
+                    .order_by("-created"))
 
-    if own_feed := request.user.is_authenticated and "own" in request.GET:
-        articles = articles.filter(author=request.user)
+        if tag := self.request.GET.get("tag"):
+            return queryset.filter(tags__name__in=[tag])
 
-    if tag := request.GET.get("tag"):
-        articles = articles.filter(tags__name__in=[tag])
+        if self.request.user.is_authenticated and "own" in self.request.GET:
+            return queryset.filter(author=self.request.user)
 
-    tags = Tag.objects.all()
+        return queryset
 
-    return TemplateResponse(
-        request,
-        "realworld/articles/home.html",
-        {
-            "articles": articles,
-            "own_feed": own_feed,
-            "tags": tags,
-        },
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tags"] = Tag.objects.all()
+        return context
 
 
-@require_http_methods(["GET"])
-def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResponse:
+class ArticleDetailView(DetailView):
+    model = Article
+    context_object_name = "article"
+    template_name = "realworld/articles/article_detail.html"
 
-    article = get_object_or_404(
-        Article.objects.select_related("author").with_favorites(request.user),
-        pk=article_id,
-    )
+    def get_queryset(self):
+        queryset = (super().get_queryset()
+                    .select_related("author")
+                    .with_favorites(self.request.user))
+        return queryset
 
-    comments = (
-        Comment.objects.filter(article=article)
-        .select_related("author")
-        .order_by("-created")
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comments"] = (Comment.objects.filter(article=self.kwargs['pk'])
+                               .select_related("author")
+                               .order_by("-created"))
 
-    context = {
-        "article": article,
-        "comments": comments,
-        "is_favorite": article.is_favorite,
-        "is_following": article.author.followers,
-        "num_favorites": article.num_favorites,
-    }
-
-    if request.user.is_authenticated:
-        context.update(
-            {
-                "is_author": article.author == request.user,
-                "comment_form": CommentForm(),
-            }
-        )
-
-    return TemplateResponse(request, "realworld/articles/article.html", context)
+        if self.request.user.is_authenticated:
+            context.update(
+                {
+                    "comment_form": CommentForm(),
+                }
+            )
+        return context
 
 
 @require_http_methods(["GET", "POST"])
