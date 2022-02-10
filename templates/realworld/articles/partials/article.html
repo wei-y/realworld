@@ -1,0 +1,32 @@
+<div class="article-preview">
+  <div class="article-meta">
+    <a href="{{ article.author.get_absolute_url }}">
+      {% if article.author.image %}
+        <img src="{{ article.author.image }}" />
+      {% else %}
+        <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" />
+      {% endif %}
+    </a>
+    <div class="info">
+      <a href="{{ article.author.get_absolute_url }}" class="author">
+        <span>{{ article.author.get_full_name }}</span>
+      </a>
+      <span class="date">{{ article.created|date:"F j, Y" }}</span>
+    </div>
+    {% include "realworld/articles/partials/small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
+  </div>
+  <a href="{{ article.get_absolute_url }}" class="preview-link">
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.summary }}</p>
+    <span>Read more...</span>
+    {% with tags=article.tags.all %}
+      {% if tags %}
+        <ul class="tag-list">
+          {% for tag in tags %}
+            <li class="tag-default tag-pill tag-outline">{{ tag }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </a>
+</div>

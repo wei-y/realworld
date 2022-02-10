@@ -1,0 +1,6 @@
+{% if request.htmx.target == "follow-profile" %}
+  {% include "realworld/accounts/partials/follow_btn.html" with button_id="follow-profile" %}
+{% else %}
+  {% include "realworld/accounts/partials/follow_btn.html" with button_id="follow-top" %}
+  {% include "realworld/accounts/partials/follow_btn.html" with button_id="follow-bottom" %}
+{% endif %}

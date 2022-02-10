@@ -1,0 +1,6 @@
+{% if is_detail %}
+  {% include "realworld/articles/partials/favorite_btn.html" with button_id="favorite-top" %}
+  {% include "realworld/articles/partials/favorite_btn.html" with button_id="favorite-bottom" %}
+{% else %}
+  {% include "realworld/articles/partials/small_favorite_btn.html" %}
+{% endif %}
