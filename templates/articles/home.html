@@ -38,6 +38,8 @@
         </div>
         {% for article in articles %}
           {% include "articles/_article.html" %}
+        {% empty %}
+          <div class="article-preview">No articles are here... yet.</div>
         {% endfor %}
       </div>
 

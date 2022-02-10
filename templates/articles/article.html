@@ -17,8 +17,26 @@
           </a>
           <span class="date">{{ article.created|date:"F j, Y" }}</span>
         </div>
-        {% include "accounts/_follow_btn.html" with button_id="follow-top" followed=article.author %}
-        {% include "articles/_favorite_btn.html" with button_id="favorite-top" %}
+        {% if user == article.author %}
+          <a href="{% url 'edit_article' article.id %}" class="btn btn-outline-secondary btn-sm">
+            <span>
+              <i class="ion-edit"></i>
+            </span>
+            <span>Edit Article</span>
+          </a>
+          <form action="{% url 'delete_article' article.id %}" method="post" style="display:inline-block">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              <span>
+                <i class="ion-trash-a"></i>
+              </span>
+              <span>Delete Article</span>
+            </button>
+          </form>
+        {% else %}
+          {% include "accounts/_follow_btn.html" with button_id="follow-top" followed=article.author %}
+          {% include "articles/_favorite_btn.html" with button_id="favorite-top" %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -44,9 +62,26 @@
           </a>
           <span class="date">{{ article.created|date:"F j, Y" }}</span>
         </div>
-        {% include "accounts/_follow_btn.html" with button_id="follow-bottom" followed=article.author %}
-
-        {% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
+        {% if user == article.author %}
+          <a href="{% url 'edit_article' article.id %}" class="btn btn-outline-secondary btn-sm">
+            <span>
+              <i class="ion-edit"></i>
+            </span>
+            <span>Edit Article</span>
+          </a>
+          <form action="{% url 'delete_article' article.id %}" method="post" style="display:inline-block">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              <span>
+                <i class="ion-trash-a"></i>
+              </span>
+              <span>Delete Article</span>
+            </button>
+          </form>
+        {% else %}
+          {% include "accounts/_follow_btn.html" with button_id="follow-bottom" followed=article.author %}
+          {% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
+        {% endif %}
       </div>
     </div>
 

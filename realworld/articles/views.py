@@ -61,6 +61,7 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
         "article": article,
         "comments": comments,
         "is_favorite": article.is_favorite,
+        "is_following": article.author.followers,
         "num_favorites": article.num_favorites,
     }
 

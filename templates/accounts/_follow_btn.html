@@ -1,18 +1,11 @@
-{% if user == followed %}
-  <button class="btn btn-sm btn-outline-secondary action-btn" disabled>
-    <span>
-      <i class="ion-plus-round"></i>
-    </span>&nbsp;
-    <span>Follow {{ followed.name }}</span>
-  </button>
-{% elif user.is_authenticated %}
+{% if user.is_authenticated %}
   <form action="{% url 'follow' followed.id %}" method="post" style="display:inline-block">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm {% if is_following %}btn-secondary{% else %}btn-outline-secondary{% endif %} action-btn">
       <span>
         <i class="ion-{{ is_following|yesno:'minus,plus' }}-round"></i>
       </span>&nbsp;
-      <span>Follow {{ followed.name }}</span>
+      <span>{{ is_following|yesno:'Unfollow,Follow' }} {{ followed.name }}</span>
     </button>
   </form>
 {% else %}
