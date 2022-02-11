@@ -1,11 +1,44 @@
 {% extends "realworld/base.html" %}
 
+{% load widget_tweaks %}
+
 {% block content %}
   <div class="editor-page">
     <div class="container page">
       <div class="row">
         <div class="col-md-10 offset-md-1 col-xs-12">
-          {% include "realworld/articles/partials/article_form.html" %}
+          <form action="{{ request.path }}" method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+              <ul class="error-messages">
+                {% for error in form.errors.values %}
+                  {{ error.as_text }}
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <fieldset class="form-group">
+              {% render_field form.title class+="form-control form-control-lg" placeholder="Article Title" %}
+            </fieldset>
+            <fieldset class="form-group">
+              {# see https://github.com/jazzband/django-widget-tweaks/issues/85 #}
+              {{ form.summary|attr:"placeholder:What's this article about?"|add_class:"form-control" }}
+            </fieldset>
+            <fieldset class="form-group">
+              {% render_field form.content class+="form-control" placeholder="Write your article (in markdown)" rows=8 %}
+            </fieldset>
+            <fieldset class="form-group">
+              {% render_field form.tags class+="form-control" placeholder="Enter tags" autocomplete="off" %}
+              <div class="tag-list" id="tags-list"></div>
+            </fieldset>
+            <fieldset>
+              <button type="submit" class="btn btn-lg pull-xs-right btn-primary">
+                <span>{{ article|yesno:"Save,Publish" }}</span>
+                <span>Article</span>
+              </button>
+            </fieldset>
+          </form>
         </div>
       </div>
     </div>
