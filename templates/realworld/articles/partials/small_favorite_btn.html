@@ -6,7 +6,7 @@
     <span>{{ num_favorites }}</span>
   </button>
 {% elif user.is_authenticated %}
-  <form action="{% url 'articles:favorite' article.id %}" method="post">
+  <form action="{% url 'articles:favorite' article.id %}" method="post" style="display:contents">
     {% csrf_token %}
     <button type="submit" class="btn {% if is_favorite %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm pull-xs-right" title="{{ is_favorite|yesno:'Remove from Favorites,Add to Favorites' }}">
       <span>
