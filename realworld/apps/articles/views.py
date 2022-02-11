@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -16,10 +15,10 @@ from django.views.generic import (
 
 from taggit.models import Tag
 
+from realworld.core.mixins import AuthorRequiredMixin
 from realworld.apps.comments.forms import Comment, CommentForm
 
-from .forms import ArticleForm
-from .models import Article
+from .forms import Article, ArticleForm
 
 
 class ArticleListView(ListView):
@@ -74,7 +73,7 @@ class ArticleDetailView(DetailView):
         return context
 
 
-class ArticleCreateView(LoginRequiredMixin, CreateView):
+class ArticleCreateView(AuthorRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
     template_name = 'realworld/articles/article_form.html'
@@ -90,21 +89,15 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ArticleUpdateView(LoginRequiredMixin, UpdateView):
+class ArticleUpdateView(AuthorRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'realworld/articles/article_form.html'
 
-    def get_queryset(self):
-        return super().get_queryset().filter(author=self.request.user)
 
-
-class ArticleDeleteView(LoginRequiredMixin, DeleteView):
+class ArticleDeleteView(AuthorRequiredMixin, DeleteView):
     model = Article
     success_url = '/'
-
-    def get_queryset(self):
-        return super().get_queryset().filter(author=self.request.user)
 
 
 @require_http_methods(["POST", "DELETE"])
