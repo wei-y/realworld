@@ -36,7 +36,9 @@ ArticleManager = models.Manager.from_queryset(ArticleQuerySet)
 
 
 class Article(models.Model):
-    author: User = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author: User = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
 
     title: str = models.CharField(max_length=120)
     summary: str = models.TextField(blank=True)
@@ -62,7 +64,7 @@ class Article(models.Model):
 
     def get_absolute_url(self) -> str:
         return reverse(
-            "article_detail",
+            "articles:detail",
             kwargs={
                 "pk": self.id,
                 "slug": self.slug,
@@ -70,4 +72,6 @@ class Article(models.Model):
         )
 
     def as_markdown(self) -> str:
-        return markdown.markdown(self.content, safe_mode="escape", extensions=["extra"])
+        return markdown.markdown(
+            self.content, safe_mode="escape", extensions=["extra"]
+        )

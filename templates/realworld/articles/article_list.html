@@ -48,7 +48,7 @@
           <p>Popular Tags</p>
           <div class="tag-list">
             {% for tag in tags %}
-              <a href="{% url 'home' %}?tag={{ tag.name }}" class="tag-pill tag-default">{{ tag }}</a>
+              <a href="{% url 'articles:list' %}?tag={{ tag.name }}" class="tag-pill tag-default">{{ tag }}</a>
             {% endfor %}
           </div>
         </div>

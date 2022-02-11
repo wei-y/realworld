@@ -15,15 +15,15 @@
     <div class="wrapper">
       <nav class="navbar navbar-light">
         <div class="container">
-          <a href="{% url 'home' %}" class="navbar-brand">conduit</a>
+          <a href="{% url 'articles:list' %}" class="navbar-brand">conduit</a>
           {# using [up-nav] to add [up-current] css class when navigate current page #}
           <ul class="nav navbar-nav pull-xs-right" up-nav>
             <li class="nav-item">
-              <a href="{% url 'home' %}" class="nav-link">Home</a>
+              <a href="{% url 'articles:list' %}" class="nav-link">Home</a>
             </li>
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <a href="{% url 'create_article' %}" class="nav-link">
+                <a href="{% url 'articles:create' %}" class="nav-link">
                   <span>
                     <i class="ion-compose"></i>
                   </span>

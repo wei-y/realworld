@@ -1,5 +1,5 @@
 {% if user.is_authenticated %}
-  <form action="{% url 'favorite' article.id %}" method="post" style="display:inline-block">
+  <form action="{% url 'articles:favorite' article.id %}" method="post" style="display:inline-block">
     {% csrf_token %}
     <button type="submit" class="btn {% if is_favorite %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm" title="{{ is_favorite|yesno:'Remove from Favorites,Add to Favorites' }}">
       <span>

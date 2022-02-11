@@ -18,13 +18,13 @@
           <span class="date">{{ article.created|date:"F j, Y" }}</span>
         </div>
         {% if user == article.author %}
-          <a href="{% url 'edit_article' article.id %}" class="btn btn-outline-secondary btn-sm">
+          <a href="{% url 'articles:edit' article.id %}" class="btn btn-outline-secondary btn-sm">
             <span>
               <i class="ion-edit"></i>
             </span>
             <span>Edit Article</span>
           </a>
-          <form action="{% url 'delete_article' article.id %}" method="post" style="display:inline-block">
+          <form action="{% url 'articles:delete' article.id %}" method="post" style="display:inline-block">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger btn-sm">
               <span>
@@ -63,13 +63,13 @@
           <span class="date">{{ article.created|date:"F j, Y" }}</span>
         </div>
         {% if user == article.author %}
-          <a href="{% url 'edit_article' article.id %}" class="btn btn-outline-secondary btn-sm">
+          <a href="{% url 'articles:edit' article.id %}" class="btn btn-outline-secondary btn-sm">
             <span>
               <i class="ion-edit"></i>
             </span>
             <span>Edit Article</span>
           </a>
-          <form action="{% url 'delete_article' article.id %}" method="post" style="display:inline-block">
+          <form action="{% url 'articles:delete' article.id %}" method="post" style="display:inline-block">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger btn-sm">
               <span>
