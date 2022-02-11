@@ -1,12 +1,7 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login as auth_login
-from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.template.response import TemplateResponse
-from django.urls import reverse
-from django.utils.html import format_html
-from django.views.decorators.http import require_http_methods
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import CreateView, ListView, UpdateView
 
 from realworld.apps.articles.models import Article
 
@@ -16,103 +11,66 @@ from .forms import SettingsForm, UserCreationForm
 User = get_user_model()
 
 
-@require_http_methods(["GET"])
-def profile(request: HttpRequest, user_id: int) -> HttpResponse:
+class ProfileView(ListView):
+    context_object_name = "articles"
+    template_name = "realworld/accounts/profile.html"
 
-    profile = get_object_or_404(User, pk=user_id)
+    def get_queryset(self):
+        profile = get_object_or_404(User, pk=self.kwargs['pk'])
+        articles = (Article.objects.select_related("author")
+                    .filter(author=profile)
+                    .with_favorites(profile)
+                    .prefetch_related("tags")
+                    .order_by("-created"))
 
-    articles = (
-        Article.objects.select_related("author")
-        .filter(author=profile)
-        .with_favorites(request.user)
-        .prefetch_related("tags")
-        .order_by("-created")
-    )
+        if "favorites" in self.request.GET:
+            return articles.filter(num_favorites__gt=0)
 
-    if favorites := "favorites" in request.GET:
-        articles = articles.filter(num_favorites__gt=0)
+        return articles
 
-    return TemplateResponse(
-        request,
-        "realworld/accounts/profile.html",
-        {
-            "profile": profile,
-            "articles": articles,
-            "favorites": favorites,
-            "is_following": profile.followers.filter(pk=request.user.id).exists(),
-        },
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = get_object_or_404(User, pk=self.kwargs['pk'])
+        context["profile"] = profile
+        context["is_following"] = profile.followers.filter(pk=self.request.user.id).exists()
+        return context
 
 
-@require_http_methods(["GET", "POST"])
-@login_required
-def settings(request: HttpRequest) -> HttpResponse:
+class SettingView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = SettingsForm
+    template_name = 'realworld/accounts/settings.html'
 
-    if request.method == "GET":
-        return TemplateResponse(
-            request,
-            "realworld/accounts/settings.html",
-            {"form": SettingsForm(instance=request.user)},
-        )
-
-    if (form := SettingsForm(request.POST, instance=request.user)).is_valid():
-        form.save()
-        return HttpResponseRedirect(request.user.get_absolute_url())
-
-    return TemplateResponse(request, "realworld/accounts/partials/settings.html", {"form": form})
+    def get_object(self):
+        return get_object_or_404(User, id=self.request.user.id)
 
 
-@require_http_methods(["GET", "POST"])
-def register(request: HttpRequest) -> HttpResponse:
+class RegisterView(CreateView):
+    model = User
+    form_class = UserCreationForm
+    template_name = "registration/register.html"
 
-    if request.method == "GET":
-        return TemplateResponse(
-            request, "registration/register.html", {"form": UserCreationForm()}
-        )
-
-    if (form := UserCreationForm(request.POST)).is_valid():
-        user = form.save()
-        auth_login(request, user)
-
-        return HttpResponseRedirect(reverse("home"))
-
-    return TemplateResponse(request, "registration/_register.html", {"form": form})
+    def form_valid(self, form):
+        valid = super().form_valid(form)
+        login(self.request, self.object)
+        return valid
 
 
-@require_http_methods(["POST", "DELETE"])
-@login_required
-def follow(request: HttpRequest, user_id: int) -> HttpResponse:
+class ProfileFollowView(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ["followers"]
+    http_method_names = ["post"]
 
-    user = get_object_or_404(User.objects.exclude(pk=request.user.id), pk=user_id)
+    def get_queryset(self, **kwargs):
+        return (super().get_queryset()
+                .filter(pk=self.kwargs['pk'])
+                .exclude(pk=self.request.user.id))
 
-    is_following: bool
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.followers.filter(id=request.user.id).exists():
+            self.object.followers.remove(request.user)
+        else:
+            self.object.followers.add(request.user)
 
-    if request.method == "DELETE":
-        user.followers.remove(request.user)
-        is_following = False
-    else:
-        user.followers.add(request.user)
-        is_following = True
-
-    return TemplateResponse(
-        request,
-        "realworld/accounts/partials/follow_action.html",
-        {
-            "followed": user,
-            "is_following": is_following,
-            "is_action": True,
-        },
-    )
-
-
-@require_http_methods(["GET"])
-def check_email(request: HttpRequest) -> HttpResponse:
-    if (email := request.GET.get("email")) and User.objects.filter(
-        email__iexact=email
-    ).exists():
-        return HttpResponse(
-            format_html(
-                """<ul class="error-messages"><li>This email is in use.</li></ul>"""
-            )
-        )
-    return HttpResponse()
+        return redirect(self.object.get_absolute_url())

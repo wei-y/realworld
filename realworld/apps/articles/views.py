@@ -54,6 +54,7 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["is_following"] = self.object.author.followers.filter(pk=self.request.user.id).exists()
         context["comments"] = (Comment.objects.filter(article=self.kwargs['pk'])
                                .select_related("author")
                                .order_by("-created"))
