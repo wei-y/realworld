@@ -1,10 +1,4 @@
-from __future__ import annotations
-
-from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404
-from django.template.response import TemplateResponse
-from django.views.decorators.http import require_http_methods
+from django.shortcuts import redirect
 from django.views.generic import (
     ListView,
     DetailView,
@@ -15,7 +9,7 @@ from django.views.generic import (
 
 from taggit.models import Tag
 
-from realworld.core.mixins import AuthorRequiredMixin
+from realworld.core.mixins import LoginRequiredMixin, AuthorRequiredMixin
 from realworld.apps.comments.forms import Comment, CommentForm
 
 from .forms import Article, ArticleForm
@@ -100,34 +94,21 @@ class ArticleDeleteView(AuthorRequiredMixin, DeleteView):
     success_url = '/'
 
 
-@require_http_methods(["POST", "DELETE"])
-@login_required
-def favorite(request: HttpRequest, article_id: int) -> HttpResponse:
+class ArticleFavoriteView(LoginRequiredMixin, UpdateView):
+    model = Article
+    fields = ["favorites"]
+    http_method_names = ["post"]
 
-    article = get_object_or_404(
-        Article.objects.select_related("author").exclude(author=request.user),
-        pk=article_id,
-    )
+    def get_queryset(self):
+        return (super().get_queryset()
+                .select_related("author")
+                .exclude(author=self.request.user))
 
-    is_favorite: bool
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.favorites.filter(id=request.user.id).exists():
+            self.object.favorites.remove(request.user)
+        else:
+            self.object.favorites.add(request.user)
 
-    if request.method == "DELETE":
-        article.favorites.remove(request.user)
-        is_favorite = False
-    else:
-        article.favorites.add(request.user)
-        is_favorite = True
-
-    return TemplateResponse(
-        request,
-        "realworld/articles/partials/favorite_action.html",
-        {
-            "article": article,
-            "is_favorite": is_favorite,
-            "num_favorites": article.favorites.count(),
-            "is_action": True,
-            "is_detail": False
-            if request.htmx.target == f"favorite-{article.id}"
-            else True,
-        },
-    )
+        return redirect(self.object.get_absolute_url())

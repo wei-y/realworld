@@ -1,28 +1,29 @@
 from django.urls import path
 
-from . import views
+from .views import (ArticleCreateView, ArticleDetailView, ArticleDeleteView,
+                    ArticleFavoriteView, ArticleListView, ArticleUpdateView)
 
 urlpatterns = [
-    path("", views.ArticleListView.as_view(), name="home"),
-    path("new/", views.ArticleCreateView.as_view(), name="create_article"),
+    path("", ArticleListView.as_view(), name="home"),
+    path("new/", ArticleCreateView.as_view(), name="create_article"),
     path(
         "article/<int:pk>/<slug:slug>/",
-        views.ArticleDetailView.as_view(),
+        ArticleDetailView.as_view(),
         name="article_detail",
     ),
     path(
         "article/edit/<int:pk>/",
-        views.ArticleUpdateView.as_view(),
+        ArticleUpdateView.as_view(),
         name="edit_article",
     ),
     path(
         "article/delete/<int:pk>/",
-        views.ArticleDeleteView.as_view(),
+        ArticleDeleteView.as_view(),
         name="delete_article",
     ),
     path(
-        "article/favorite/<int:article_id>/",
-        views.favorite,
+        "article/favorite/<int:pk>/",
+        ArticleFavoriteView.as_view(),
         name="favorite",
     ),
 ]
