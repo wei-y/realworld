@@ -18,3 +18,10 @@ up.form.config.submitSelectors.push(["form"]);
 
 // Let unpoly render page from [.wrapper] class instead of [main] html tag.
 up.fragment.config.mainTargets = ".wrapper";
+
+// Disable inputs and buttons when Form submit.
+up.on("up:form:submit", () => {
+  document.querySelectorAll('button[type=submit], fieldset').forEach((element) => {
+    element.disabled = true;
+  })
+});
