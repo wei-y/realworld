@@ -2,9 +2,9 @@
   <div class="article-meta">
     <a href="{{ article.author.get_absolute_url }}">
       {% if article.author.image %}
-        <img src="{{ article.author.image }}" />
+        <img src="{{ article.author.image }}" width="32px" height="100%" alt="author image" />
       {% else %}
-        <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" />
+        <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" width="32px" height="100%" alt="author image" />
       {% endif %}
     </a>
     <div class="info">

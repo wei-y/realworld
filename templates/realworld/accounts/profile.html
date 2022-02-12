@@ -7,9 +7,9 @@
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
           {% if profile.image %}
-            <img src="{{ profile.image }}" class="user-img" />
+            <img src="{{ profile.image }}" class="user-img" width="100%" height="100%" alt="profile image"  />
           {% else %}
-            <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="user-img" />
+            <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="user-img" width="100%" height="100%" alt="profile image"  />
           {% endif %}
           <h4>{{ profile.name }}</h4>
           <p>{{ profile.bio }}</p>

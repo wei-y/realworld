@@ -8,9 +8,9 @@
   </div>
   <div class="card-footer">
     {% if user.image %}
-      <img src="{{ user.image }}" class="comment-author-img" />
+      <img src="{{ user.image }}" class="comment-author-img" width="30px" height="100%" alt="user image" />
     {% else %}
-      <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="comment-author-img" />
+      <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="comment-author-img" width="30px" height="100%" alt="user image" />
     {% endif %}
     <button type="submit" class="btn btn-sm btn-primary">
       {{ comment|yesno:'Save,Post' }} Comment
