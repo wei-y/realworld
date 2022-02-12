@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<form class="card comment-form" {% if comment %}action="{% url 'edit_comment' comment.id %}"{% else %}action="{% url 'add_comment' article.id %}" method="post"{% endif %}>
+<form class="card comment-form" {% if comment %}action="{% url 'edit_comment' comment.id %}"{% endif %} method="post">
   {% csrf_token %}
 
   <div class="card-block">
@@ -17,9 +17,3 @@
     </button>
   </div>
 </form>
-
-{% if new_comment %}
-  <div id="comment-{{ new_comment.id }}">
-    {% include "realworld/comments/comment.html" with comment=new_comment %}
-  </div>
-{% endif %}

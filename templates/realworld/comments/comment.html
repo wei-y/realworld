@@ -14,13 +14,10 @@
     <span class="date-posted">{{ comment.created|date:"F j, Y" }}</span>
 
     {% if user.is_authenticated and user == comment.author %}
-      <div class="mod-options row">
-        <a href="{% url 'edit_comment' comment.id %}">
-          <i class="ion-edit"></i>
-        </a>
-        <form action="{% url 'delete_comment' comment.id %}" method="post">
+      <div class="mod-options">
+        <form action="{% url 'comments:delete' comment.id %}" method="post">
           {% csrf_token %}
-          <button type="submit" style="line-height:0;border:none;background:transparent">
+          <button type="submit" style="line-height:0;border:none;background:transparent;outline:none">
             <i class="ion-trash-a"></i>
           </button>
         </form>

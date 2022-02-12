@@ -54,18 +54,25 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_following"] = self.object.author.followers.filter(pk=self.request.user.id).exists()
-        context["comments"] = (Comment.objects.filter(article=self.kwargs['pk'])
-                               .select_related("author")
-                               .order_by("-created"))
 
-        if self.request.user.is_authenticated:
-            context.update(
-                {
-                    "comment_form": CommentForm(),
-                }
-            )
+        is_following = (self.object.author.followers
+                        .filter(pk=self.request.user.id)
+                        .exists())
+        comments = (Comment.objects.filter(article=self.kwargs['pk'])
+                    .select_related("author")
+                    .order_by("-created"))
+
+        context["is_following"] = is_following
+        context["comments"] = comments
+        context["comment_form"] = CommentForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        comment = Comment(content=request.POST.get('content'),
+                          author=self.request.user,
+                          article=self.get_object())
+        comment.save()
+        return self.get(self, request, *args, **kwargs)
 
 
 class ArticleCreateView(AuthorRequiredMixin, CreateView):
