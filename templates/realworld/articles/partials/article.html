@@ -15,18 +15,20 @@
     </div>
     {% include "realworld/articles/partials/small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
   </div>
-  <a href="{{ article.get_absolute_url }}" class="preview-link">
+  <div class="preview-link">
     <h1>{{ article.title }}</h1>
     <p>{{ article.summary }}</p>
-    <span>Read more...</span>
+    <a href="{{ article.get_absolute_url }}">Read more...</a>
     {% with tags=article.tags.all %}
       {% if tags %}
         <ul class="tag-list">
           {% for tag in tags %}
-            <li class="tag-default tag-pill tag-outline">{{ tag }}</li>
+            <li class="tag-default tag-pill tag-outline">
+              <a href="{% url 'articles:list' %}?tag={{ tag.name }}">{{ tag }}</a>
+            </li>
           {% endfor %}
         </ul>
       {% endif %}
     {% endwith %}
-  </a>
+  </div>
 </div>

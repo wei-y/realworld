@@ -44,8 +44,21 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        <p>{{ article.summary }}</p>
-        {{ article.as_markdown|safe }}
+        <div>
+          <p>{{ article.summary }}</p>
+          {{ article.as_markdown|safe }}
+        </div>
+        {% with tags=article.tags.all %}
+          {% if tags %}
+            <ul class="tag-list">
+              {% for tag in tags %}
+                <li class="tag-default tag-pill tag-outline">
+                  <a href="{% url 'articles:list' %}?tag={{ tag.name }}">{{ tag }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
       </div>
     </div>
     <hr />
