@@ -6,9 +6,7 @@ from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
-    def create_user(
-        self, email: str, password: str | None = None, **other_fields
-    ) -> User:
+    def create_user(self, email: str, password: str | None = None, **other_fields) -> User:
 
         user = User(email=email, **other_fields)
 

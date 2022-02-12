@@ -16,12 +16,14 @@ class ProfileView(ListView):
     template_name = "realworld/accounts/profile.html"
 
     def get_queryset(self):
-        profile = get_object_or_404(User, pk=self.kwargs['pk'])
-        articles = (Article.objects.select_related("author")
-                    .filter(author=profile)
-                    .with_favorites(profile)
-                    .prefetch_related("tags")
-                    .order_by("-created"))
+        profile = get_object_or_404(User, pk=self.kwargs["pk"])
+        articles = (
+            Article.objects.select_related("author")
+            .filter(author=profile)
+            .with_favorites(profile)
+            .prefetch_related("tags")
+            .order_by("-created")
+        )
 
         if "favorites" in self.request.GET:
             return articles.filter(num_favorites__gt=0)
@@ -30,16 +32,18 @@ class ProfileView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = get_object_or_404(User, pk=self.kwargs['pk'])
+        profile = get_object_or_404(User, pk=self.kwargs["pk"])
         context["profile"] = profile
-        context["is_following"] = profile.followers.filter(pk=self.request.user.id).exists()
+        context["is_following"] = profile.followers.filter(
+            pk=self.request.user.id
+        ).exists()
         return context
 
 
 class SettingView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = SettingsForm
-    template_name = 'realworld/accounts/settings.html'
+    template_name = "realworld/accounts/settings.html"
 
     def get_object(self):
         return get_object_or_404(User, id=self.request.user.id)
@@ -62,9 +66,12 @@ class ProfileFollowView(LoginRequiredMixin, UpdateView):
     http_method_names = ["post"]
 
     def get_queryset(self, **kwargs):
-        return (super().get_queryset()
-                .filter(pk=self.kwargs['pk'])
-                .exclude(pk=self.request.user.id))
+        return (
+            super()
+            .get_queryset()
+            .filter(pk=self.kwargs["pk"])
+            .exclude(pk=self.request.user.id)
+        )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

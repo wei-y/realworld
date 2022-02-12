@@ -4,12 +4,12 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
 )
 
 from taggit.models import Tag
 
-from realworld.core.mixins import LoginRequiredMixin, AuthorRequiredMixin
+from realworld.apps.core.mixins import LoginRequiredMixin, AuthorRequiredMixin
 from realworld.apps.comments.forms import Comment, CommentForm
 
 from .forms import Article, ArticleForm
@@ -21,11 +21,14 @@ class ArticleListView(ListView):
     template_name = "realworld/articles/article_list.html"
 
     def get_queryset(self):
-        queryset = (super().get_queryset()
-                    .select_related("author")
-                    .with_favorites(self.request.user)
-                    .prefetch_related("tags")
-                    .order_by("-created"))
+        queryset = (
+            super()
+            .get_queryset()
+            .select_related("author")
+            .with_favorites(self.request.user)
+            .prefetch_related("tags")
+            .order_by("-created")
+        )
 
         if tag := self.request.GET.get("tag"):
             return queryset.filter(tags__name__in=[tag])
@@ -47,20 +50,25 @@ class ArticleDetailView(DetailView):
     template_name = "realworld/articles/article_detail.html"
 
     def get_queryset(self):
-        queryset = (super().get_queryset()
-                    .select_related("author")
-                    .with_favorites(self.request.user))
+        queryset = (
+            super()
+            .get_queryset()
+            .select_related("author")
+            .with_favorites(self.request.user)
+        )
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        is_following = (self.object.author.followers
-                        .filter(pk=self.request.user.id)
-                        .exists())
-        comments = (Comment.objects.filter(article=self.kwargs['pk'])
-                    .select_related("author")
-                    .order_by("-created"))
+        is_following = self.object.author.followers.filter(
+            pk=self.request.user.id
+        ).exists()
+        comments = (
+            Comment.objects.filter(article=self.kwargs["pk"])
+            .select_related("author")
+            .order_by("-created")
+        )
 
         context["is_following"] = is_following
         context["comments"] = comments
@@ -68,9 +76,11 @@ class ArticleDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
-        comment = Comment(content=request.POST.get('content'),
-                          author=self.request.user,
-                          article=self.get_object())
+        comment = Comment(
+            content=request.POST.get("content"),
+            author=self.request.user,
+            article=self.get_object(),
+        )
         comment.save()
         return self.get(self, request, *args, **kwargs)
 
@@ -78,7 +88,7 @@ class ArticleDetailView(DetailView):
 class ArticleCreateView(AuthorRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
-    template_name = 'realworld/articles/article_form.html'
+    template_name = "realworld/articles/article_form.html"
 
     def form_valid(self, form):
         article = form.save(commit=False)
@@ -94,12 +104,12 @@ class ArticleCreateView(AuthorRequiredMixin, CreateView):
 class ArticleUpdateView(AuthorRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
-    template_name = 'realworld/articles/article_form.html'
+    template_name = "realworld/articles/article_form.html"
 
 
 class ArticleDeleteView(AuthorRequiredMixin, DeleteView):
     model = Article
-    success_url = '/'
+    success_url = "/"
 
 
 class ArticleFavoriteView(LoginRequiredMixin, UpdateView):
@@ -108,9 +118,12 @@ class ArticleFavoriteView(LoginRequiredMixin, UpdateView):
     http_method_names = ["post"]
 
     def get_queryset(self):
-        return (super().get_queryset()
-                .select_related("author")
-                .exclude(author=self.request.user))
+        return (
+            super()
+            .get_queryset()
+            .select_related("author")
+            .exclude(author=self.request.user)
+        )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
