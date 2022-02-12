@@ -6,7 +6,7 @@ urlpatterns = [
     path("", include("realworld.apps.articles.urls")),
     path("", include("realworld.apps.accounts.urls")),
     path("comments/", include("realworld.apps.comments.urls")),
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
 ]
 
 if settings.DEBUG:

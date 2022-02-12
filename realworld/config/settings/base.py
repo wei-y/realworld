@@ -112,6 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "accounts.User"
 
+ADMIN_URL = config("ADMIN_URL", default="admin/")
+
 LOGIN_URL = "/login/"
 
 LOGIN_REDIRECT_URL = "/"
