@@ -105,7 +105,7 @@
             {% include "realworld/comments/comment_form.html" with form=comment_form %}
           </div>
         {% else %}
-          <p>
+          <p style="text-align:center">
             <a href="{% url 'login' %}">Sign in</a>
             or
             <a href="{% url 'register' %}">sign up</a>
