@@ -1,26 +1,52 @@
+#  Real World App
 
-Implementation of real-world application: https://github.com/gothinkster/realworld/ using Django and Unpoly.
+Implementation of real world application: https://github.com/gothinkster/realworld/ using Django and Unpoly.
 
-An in-depth discussion of this implementation can be found [here](https://danjacob.net/posts/anatomyofdjangohtmxproject/).
-
-Tech Stack:
-
-* [Django](https://djangoproject.com)
-* [Unpoly](https://unpoly.com)
+## Installation:
 
 To install and run locally:
 
-```bash
-git clone https://github.com/alnuaimi94/realworld/ && cd realworld
+- Clone the project:
 
-python -m venv venv
+  ```bash
+  git clone https://github.com/alnuaimi94/realworld
+  ```
 
-source venv/bin/activate
+- Change directory & Create virtualenv called **env**:
+  ```bash
+  cd realworld
+  ```
+  ```bash
+  python3 -m venv env
+  ```
 
-pip install -r requirements.txt
+- Activate virtualenv & Install dependencies:
+  - for Windows System:
+    ```bash
+      env/Scripts/activate
+    ```
+  - for Linux System:
+    ```bash
+      source ./env/bin/activate
+    ```
+  ```bash
+  pip install -r requirements/local.txt
+  ```
 
-./manage.py migrate && ./manage.py runserver
-```
+- Change DJANGO_SETTINGS_MODULE to *local* in each manage.py, asgi.py and wsgi.py files.
+  ```python
+  os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'realworld.config.settings.local')
+  ```
 
+- Migrate & Runserver:
+  ```bash
+  python manage.py migrate
+  ```
+  ```bash
+  python manage.py runserver
+  ```
 
-**Note: this is just a reference implementation and is not intended for production use.**
+- Finally open the localhost in the browser:
+  ```bash
+    http://127.0.0.1:8000/
+  ```

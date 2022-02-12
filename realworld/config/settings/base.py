@@ -16,7 +16,7 @@ SECRET_KEY = config(
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "conduit2.herokuapp.com"]
 
 INSTALLED_APPS = [
     # Django apps
