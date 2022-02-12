@@ -20,8 +20,18 @@
               </span>
               <span>Edit Profile Settings</span>
             </a>
+            {% if user.is_staff or user.is_superuser %}
+              <a href="{% url 'admin:index' %}" target="_blank" class="btn btn-sm btn-outline-secondary action-btn" style="margin:0 3px">
+                <span>
+                  <i class="ion-gear-a"></i>
+                </span>
+                <span>Dashboard</span>
+              </a>
+            {% endif %}
           {% else %}
-            {% include "realworld/accounts/partials/follow_btn.html" with followed=profile %}
+            <div class="pull-xs-right">
+              {% include "realworld/accounts/partials/follow_btn.html" with followed=profile %}
+            </div>
           {% endif %}
         </div>
       </div>
