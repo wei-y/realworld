@@ -28,7 +28,7 @@ class ProfileView(ListView):
         )
 
         if "favorites" in self.request.GET:
-            return articles.filter(num_favorites__gt=0).exclude(author=profile)
+            return articles.filter(is_favorite=True)
 
         return articles.filter(author=profile)
 

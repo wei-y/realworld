@@ -19,6 +19,7 @@ class ArticleListView(ListView):
     model = Article
     context_object_name = "articles"
     template_name = "realworld/articles/article_list.html"
+    ordering = ["-created"]
 
     def get_queryset(self):
         queryset = (
@@ -27,7 +28,6 @@ class ArticleListView(ListView):
             .select_related("author")
             .with_favorites(self.request.user)
             .prefetch_related("tags")
-            .order_by("-created")
         )
 
         if tag := self.request.GET.get("tag"):
