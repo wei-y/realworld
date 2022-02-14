@@ -1,15 +1,14 @@
-from django import forms
-from django.contrib.auth import get_user_model, password_validation
+from django.forms import ModelForm, CharField, PasswordInput
+from django.contrib.auth import password_validation
 
-User = get_user_model()
+from .models import User
 
 
-class UserCreationForm(forms.ModelForm):
-
-    password = forms.CharField(
+class UserCreationForm(ModelForm):
+    password = CharField(
         label="Password",
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        widget=PasswordInput(attrs={"autocomplete": "new-password"}),
         help_text=password_validation.password_validators_help_text_html(),
     )
 
@@ -17,7 +16,7 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ["email", "name"]
 
-    def save(self, commit: bool = True) -> User:
+    def save(self, commit: bool = True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
@@ -25,13 +24,12 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
-class SettingsForm(forms.ModelForm):
-
-    password = forms.CharField(
+class SettingsForm(ModelForm):
+    password = CharField(
         label="Password",
         strip=False,
         required=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        widget=PasswordInput(attrs={"autocomplete": "new-password"}),
         help_text=password_validation.password_validators_help_text_html(),
     )
 
@@ -39,7 +37,7 @@ class SettingsForm(forms.ModelForm):
         model = User
         fields = ["email", "name", "bio", "image"]
 
-    def save(self, commit: bool = True) -> User:
+    def save(self, commit: bool = True):
         user = super().save(commit=False)
         if self.cleaned_data["password"]:
             user.set_password(self.cleaned_data["password"])

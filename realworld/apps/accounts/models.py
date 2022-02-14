@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.urls import reverse
@@ -11,7 +9,7 @@ class CustomUserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, email: str, password: str, **extra_fields) -> User:
+    def create_user(self, email, password, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
@@ -39,16 +37,15 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-
     # remove default fields
     username = None
     first_name = None
     last_name = None
 
-    email: str = models.EmailField("Email address", unique=True)
-    name: str = models.CharField(max_length=60)
-    bio: str = models.TextField(blank=True)
-    image: str | None = models.URLField(null=True, blank=True)
+    email = models.EmailField("Email address", unique=True)
+    name = models.CharField(max_length=60)
+    bio = models.TextField(blank=True)
+    image = models.URLField(null=True, blank=True)
 
     followers = models.ManyToManyField("self", blank=True)
 
@@ -60,11 +57,11 @@ class User(AbstractUser):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("profile", args=[self.id])
 
-    def get_full_name(self) -> str:
+    def get_full_name(self):
         return self.name
 
-    def get_short_name(self) -> str:
+    def get_short_name(self):
         return self.name

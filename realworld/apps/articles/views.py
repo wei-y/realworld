@@ -16,25 +16,22 @@ from .forms import Article, ArticleForm
 
 
 class ArticleListView(ListView):
-    model = Article
     context_object_name = "articles"
     template_name = "realworld/articles/article_list.html"
-    ordering = ["-created"]
 
     def get_queryset(self):
         queryset = (
-            super()
-            .get_queryset()
-            .select_related("author")
+            Article.objects.select_related("author")
             .with_favorites(self.request.user)
             .prefetch_related("tags")
+            .order_by("-created")
         )
 
         if tag := self.request.GET.get("tag"):
             return queryset.filter(tags__name__in=[tag])
 
-        if "hot" in self.request.GET:
-            return queryset.order_by("-favorites")
+        if "own" in self.request.GET:
+            return queryset.filter(author=self.request.user)
 
         return queryset
 
@@ -45,16 +42,12 @@ class ArticleListView(ListView):
 
 
 class ArticleDetailView(DetailView):
-    model = Article
     context_object_name = "article"
     template_name = "realworld/articles/article_detail.html"
 
     def get_queryset(self):
-        queryset = (
-            super()
-            .get_queryset()
-            .select_related("author")
-            .with_favorites(self.request.user)
+        queryset = Article.objects.select_related("author").with_favorites(
+            self.request.user
         )
         return queryset
 
@@ -113,16 +106,12 @@ class ArticleDeleteView(AuthorRequiredMixin, DeleteView):
 
 
 class ArticleFavoriteView(LoginRequiredMixin, UpdateView):
-    model = Article
     fields = ["favorites"]
     http_method_names = ["post"]
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .select_related("author")
-            .exclude(author=self.request.user)
+        return Article.objects.select_related("author").exclude(
+            author=self.request.user
         )
 
     def post(self, request, *args, **kwargs):

@@ -1,14 +1,11 @@
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import CreateView, ListView, UpdateView
 
 from realworld.apps.articles.models import Article
 
-from .forms import SettingsForm, UserCreationForm
-
-
-User = get_user_model()
+from .forms import User, SettingsForm, UserCreationForm
 
 
 class ProfileView(ListView):

@@ -17,19 +17,17 @@
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active" up-nav>
             <li class="nav-item">
-              <a href="{{ request.path }}" class="nav-link">
-                <span>
-                  <i class="ion-navicon-round"></i>
-                </span>&nbsp;
-                <span>Latest Feed</span>
+              <a href="{% url 'articles:list' %}" class="nav-link">
+                <span>Global Articles</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{{ request.path }}?hot" class="nav-link">
-                <span><i class="ion-fireball"></i></span>&nbsp;
-                <span>Hot Feed</span>
-              </a>
-            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a href="{% url 'articles:list' %}?own" class="nav-link">
+                  <span>My Articles</span>
+                </a>
+              </li>
+            {% endif %}
             {% if 'tag' in request.get_full_path %}
               <li class="nav-item">
                 <a href="{{ request.get_full_path }}" class="nav-link">
