@@ -8,16 +8,6 @@ up-progress-bar {
   background-color: #5cb85c;
 }
 
-.navbar-light .navbar-nav .nav-link.up-current {
-  color: rgba(0, 0, 0, 0.8);
-}
-
-.nav-pills.outline-active .nav-link.up-current {
-  background: #fff !important;
-  border-bottom: 2px solid #5cb85c !important;
-  color: #5cb85c !important;
-}
-
 /* realworld styles */
 .wrapper {
   outline: none;

@@ -15,22 +15,22 @@
     <div class="row">
       <div class="col-md-9">
         <div class="feed-toggle">
-          <ul class="nav nav-pills outline-active" up-nav>
+          <ul class="nav nav-pills outline-active">
             <li class="nav-item">
-              <a href="{% url 'articles:list' %}" class="nav-link">
+              <a href="{% url 'articles:list' %}" class="nav-link{% if not 'own' in request.get_full_path and not 'tag' in request.get_full_path %} active{% endif %}">
                 <span>Global Articles</span>
               </a>
             </li>
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <a href="{% url 'articles:list' %}?own" class="nav-link">
+                <a href="{% url 'articles:list' %}?own" class="nav-link{% if 'own' in request.get_full_path %} active{% endif %}">
                   <span>My Articles</span>
                 </a>
               </li>
             {% endif %}
             {% if 'tag' in request.get_full_path %}
               <li class="nav-item">
-                <a href="{{ request.get_full_path }}" class="nav-link">
+                <a href="{{ request.get_full_path }}" class="nav-link{% if 'tag' in request.get_full_path %} active{% endif %}">
                   <span>
                     <i class="ion-pound"></i>
                   </span>

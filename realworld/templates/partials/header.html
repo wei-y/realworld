@@ -2,47 +2,50 @@
   <nav class="navbar navbar-light">
     <div class="container">
       <a href="{% url 'articles:list' %}" class="navbar-brand">conduit</a>
-      {# using [up-nav] to add [up-current] css class when navigate current page #}
-      <ul class="nav navbar-nav pull-xs-right" up-nav>
-        <li class="nav-item">
-          <a href="{% url 'articles:list' %}" class="nav-link">Home</a>
-        </li>
-        {% if user.is_authenticated %}
+      {% with url_name=request.resolver_match.url_name %}
+        <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
-            <a href="{% url 'articles:create' %}" class="nav-link">
-              <span>
-                <i class="ion-compose"></i>
-              </span>
-              <span>New Article</span>
+            <a href="{% url 'articles:list' %}" class="nav-link{% if url_name == 'list' %} active{% endif %}">
+              Home
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'settings' %}" class="nav-link">
-              <span>
-                <i class="ion-gear-a"></i>
-              </span>
-              <span>Settings</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ user.get_absolute_url }}" class="nav-link">
-              {% if user.image %}
-                <img src="{{ user.image }}" class="user-pic" width="26px" height="100%" alt="author image" />
-              {% else %}
-                <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="user-pic" width="26px" height="100%" alt="author image"  />
-              {% endif %}
-              <span>{{ user.name }}</span>
-            </a>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a href="{% url 'login' %}" class="nav-link">Sign in</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'register' %}" class="nav-link">Sign up</a>
-          </li>
-        {% endif %}
-      </ul>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{% url 'articles:create' %}" class="nav-link{% if url_name == 'create' %} active{% endif %}">
+                <span>
+                  <i class="ion-compose"></i>
+                </span>
+                <span>New Article</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'settings' %}" class="nav-link{% if url_name == 'settings' %} active{% endif %}">
+                <span>
+                  <i class="ion-gear-a"></i>
+                </span>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ user.get_absolute_url }}" class="nav-link{% if url_name == 'profile' %} active{% endif %}">
+                {% if user.image %}
+                  <img src="{{ user.image }}" class="user-pic" width="26px" height="100%" alt="author image" />
+                {% else %}
+                  <img src="https://api.realworld.io/images/smiley-cyrus.jpeg" class="user-pic" width="26px" height="100%" alt="author image"  />
+                {% endif %}
+                <span>{{ user.name }}</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a href="{% url 'login' %}" class="nav-link{% if url_name == 'login' %} active{% endif %}">Sign in</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'register' %}" class="nav-link{% if url_name == 'register' %} active{% endif %}">Sign up</a>
+            </li>
+          {% endif %}
+        </ul>
+      {% endwith %}
     </div>
   </nav>
 </header>

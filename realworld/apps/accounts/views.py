@@ -9,16 +9,13 @@ from .forms import User, SettingsForm, UserCreationForm
 
 
 class ProfileView(ListView):
-    model = Article
     context_object_name = "articles"
     template_name = "realworld/accounts/profile.html"
 
     def get_queryset(self):
         profile = get_object_or_404(User, pk=self.kwargs["pk"])
         articles = (
-            super()
-            .get_queryset()
-            .select_related("author")
+            Article.objects.select_related("author")
             .with_favorites(self.request.user)
             .prefetch_related("tags")
             .order_by("-created")
@@ -60,16 +57,12 @@ class RegisterView(CreateView):
 
 
 class ProfileFollowView(LoginRequiredMixin, UpdateView):
-    model = User
     fields = ["followers"]
     http_method_names = ["post"]
 
     def get_queryset(self, **kwargs):
-        return (
-            super()
-            .get_queryset()
-            .filter(pk=self.kwargs["pk"])
-            .exclude(pk=self.request.user.id)
+        return User.objects.filter(pk=self.kwargs["pk"]).exclude(
+            pk=self.request.user.id
         )
 
     def post(self, request, *args, **kwargs):
