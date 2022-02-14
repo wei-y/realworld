@@ -22,7 +22,7 @@ class ProfileView(ListView):
             super()
             .get_queryset()
             .select_related("author")
-            .with_favorites(profile)
+            .with_favorites(self.request.user)
             .prefetch_related("tags")
             .order_by("-created")
         )

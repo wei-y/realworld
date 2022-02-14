@@ -33,8 +33,8 @@ class ArticleListView(ListView):
         if tag := self.request.GET.get("tag"):
             return queryset.filter(tags__name__in=[tag])
 
-        if self.request.user.is_authenticated and "own" in self.request.GET:
-            return queryset.filter(author=self.request.user)
+        if "hot" in self.request.GET:
+            return queryset.order_by("-favorites")
 
         return queryset
 

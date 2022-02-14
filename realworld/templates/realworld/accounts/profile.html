@@ -44,11 +44,19 @@
         <div class="articles-toggle">
           <ul class="nav nav-pills outline-active" up-nav>
             <li class="nav-item">
-              <a href="{{ request.path }}" class="nav-link">My Articles</a>
+              <a href="{{ request.path }}" class="nav-link">
+                {% if user == profile %}
+                  <span>My Articles</span>
+                {% else %}
+                  <span>Articles</span>
+                {% endif %}
+              </a>
             </li>
-            <li class="nav-item">
-              <a href="{{ request.path }}?favorites" class="nav-link">Favorited Articles</a>
-            </li>
+            {% if user == profile %}
+              <li class="nav-item">
+                <a href="{{ request.path }}?favorites" class="nav-link">Favorited Articles</a>
+              </li>
+            {% endif %}
           </ul>
         </div>
 

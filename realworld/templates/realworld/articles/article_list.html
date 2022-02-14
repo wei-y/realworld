@@ -16,13 +16,19 @@
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active" up-nav>
-            {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a href="{{ request.path }}?own" class="nav-link">Your Feed</a>
-              </li>
-            {% endif %}
             <li class="nav-item">
-              <a href="{{ request.path }}" class="nav-link">Global Feed</a>
+              <a href="{{ request.path }}" class="nav-link">
+                <span>
+                  <i class="ion-navicon-round"></i>
+                </span>&nbsp;
+                <span>Latest Feed</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ request.path }}?hot" class="nav-link">
+                <span><i class="ion-fireball"></i></span>&nbsp;
+                <span>Hot Feed</span>
+              </a>
             </li>
             {% if 'tag' in request.get_full_path %}
               <li class="nav-item">
