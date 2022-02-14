@@ -12,23 +12,25 @@ User = get_user_model()
 
 
 class ProfileView(ListView):
+    model = Article
     context_object_name = "articles"
     template_name = "realworld/accounts/profile.html"
 
     def get_queryset(self):
         profile = get_object_or_404(User, pk=self.kwargs["pk"])
         articles = (
-            Article.objects.select_related("author")
-            .filter(author=profile)
+            super()
+            .get_queryset()
+            .select_related("author")
             .with_favorites(profile)
             .prefetch_related("tags")
             .order_by("-created")
         )
 
         if "favorites" in self.request.GET:
-            return articles.filter(num_favorites__gt=0)
+            return articles.filter(num_favorites__gt=0).exclude(author=profile)
 
-        return articles
+        return articles.filter(author=profile)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
