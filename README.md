@@ -20,7 +20,7 @@ To install and run locally:
   python3 -m venv env
   ```
 
-- Activate virtualenv & Install dependencies:
+- Activate virtualenv:
   - for Windows System:
     ```bash
       env/Scripts/activate
@@ -29,9 +29,16 @@ To install and run locally:
     ```bash
       source ./env/bin/activate
     ```
-  ```bash
-  pip install -r requirements/local.txt
-  ```
+
+- Install dependencies:
+  - Edit **requirements.txt** file to:
+    ```bash
+    -r requirements/local.txt
+    ```
+  - Then install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 - Change DJANGO_SETTINGS_MODULE to *local* in each manage.py, asgi.py and wsgi.py files.
   ```python
