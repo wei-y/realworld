@@ -1,16 +1,16 @@
 from django.shortcuts import redirect
 from django.views.generic import (
-    ListView,
-    DetailView,
     CreateView,
-    UpdateView,
     DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
 )
 
 from taggit.models import Tag
 
-from realworld.apps.core.mixins import LoginRequiredMixin, AuthorRequiredMixin
 from realworld.apps.comments.forms import Comment, CommentForm
+from realworld.apps.core.mixins import AuthorRequiredMixin, LoginRequiredMixin
 
 from .forms import Article, ArticleForm
 

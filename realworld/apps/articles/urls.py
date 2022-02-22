@@ -2,8 +2,8 @@ from django.urls import path
 
 from .views import (
     ArticleCreateView,
-    ArticleDetailView,
     ArticleDeleteView,
+    ArticleDetailView,
     ArticleFavoriteView,
     ArticleListView,
     ArticleUpdateView,

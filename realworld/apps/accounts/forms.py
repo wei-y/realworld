@@ -1,5 +1,5 @@
-from django.forms import ModelForm, CharField, PasswordInput
 from django.contrib.auth import password_validation
+from django.forms import CharField, ModelForm, PasswordInput
 
 from .models import User
 

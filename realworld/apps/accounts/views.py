@@ -5,7 +5,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 
 from realworld.apps.articles.models import Article
 
-from .forms import User, SettingsForm, UserCreationForm
+from .forms import SettingsForm, User, UserCreationForm
 
 
 class ProfileView(ListView):
