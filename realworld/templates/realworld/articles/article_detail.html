@@ -24,7 +24,7 @@
             </span>
             <span>Edit Article</span>
           </a>
-          <form action="{% url 'articles:delete' article.id %}" method="post" style="display:inline-block">
+          <form action="{% url 'articles:delete' article.id %}" method="post" style="display:inline-block" up-confirm="Really delete?">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger btn-sm">
               <span>

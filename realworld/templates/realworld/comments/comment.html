@@ -15,7 +15,7 @@
 
     {% if user.is_authenticated and user == comment.author %}
       <div class="mod-options">
-        <form action="{% url 'comments:delete' comment.id %}" method="post">
+        <form action="{% url 'comments:delete' comment.id %}" method="post" up-confirm="Really delete?">
           {% csrf_token %}
           <button type="submit" style="line-height:0;border:none;background:transparent;outline:none">
             <i class="ion-trash-a"></i>
