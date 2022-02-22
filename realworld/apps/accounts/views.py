@@ -30,7 +30,7 @@ class ProfileView(ListView):
         context = super().get_context_data(**kwargs)
         profile = get_object_or_404(User, pk=self.kwargs["pk"])
         context["profile"] = profile
-        context["is_following"] = profile.followers.filter(
+        context["is_following"] = profile.following.filter(
             pk=self.request.user.id
         ).exists()
         return context
@@ -57,7 +57,7 @@ class RegisterView(CreateView):
 
 
 class ProfileFollowView(LoginRequiredMixin, UpdateView):
-    fields = ["followers"]
+    fields = ["following"]
     http_method_names = ["post"]
 
     def get_queryset(self, **kwargs):
@@ -67,9 +67,9 @@ class ProfileFollowView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.followers.filter(id=request.user.id).exists():
-            self.object.followers.remove(request.user)
+        if self.object.following.filter(id=request.user.id).exists():
+            self.object.following.remove(request.user)
         else:
-            self.object.followers.add(request.user)
+            self.object.following.add(request.user)
 
         return redirect(self.object.get_absolute_url())

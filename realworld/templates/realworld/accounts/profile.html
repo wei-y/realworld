@@ -33,6 +33,15 @@
               {% include "realworld/accounts/partials/follow_btn.html" with followed=profile %}
             </div>
           {% endif %}
+          <div class="pull-xs-left">
+            <a href="#">
+              <b>Following: {{ profile.followers.count }}</b>
+            </a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="#">
+              <b>Followers: {{ profile.following.count }}</b>
+            </a>
+          </div>
         </div>
       </div>
     </div>
