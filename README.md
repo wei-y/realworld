@@ -31,7 +31,7 @@ To install and run locally:
     ```
 
 - Install dependencies:
-  - Edit **requirements.txt** file to:
+  - Edit [**requirements.txt**](./requirements.txt) file from *production* to *local* :
     ```bash
     -r requirements/local.txt
     ```
@@ -40,7 +40,7 @@ To install and run locally:
     pip install -r requirements.txt
     ```
 
-- Change DJANGO_SETTINGS_MODULE to *local* in each manage.py, asgi.py and wsgi.py files.
+- Change DJANGO_SETTINGS_MODULE from *production* to *local* in [manage.py](./manage.py), [asgi.py](./realworld/config/asgi.py) and [wsgi.py](./realworld/config/wsgi.py) files.
   ```python
   os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'realworld.config.settings.local')
   ```
