@@ -4,9 +4,9 @@ from .base import *
 
 DEBUG = True
 
-INSTALLED_APPS += ["debug_toolbar"]
+# INSTALLED_APPS += ["debug_toolbar"]
 
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+# MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 TEMPLATES[0]["OPTIONS"]["debug"] = True
 
